@@ -1,5 +1,6 @@
 import heroImage from "@/assets/hero-festival.jpg";
 import { Button } from "@/components/ui/button";
+import { JoinSheet } from "./sheet/join";
 
 export function Hero() {
   return (
@@ -37,13 +38,7 @@ export function Hero() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-            <Button
-              size="lg"
-              // onClick={scrollToJoinSection}
-              className=" text-lg px-8 py-4"
-            >
-              Quero fazer parte do Boi Mangangá
-            </Button>
+            <JoinSheet />
             <Button size="lg" variant="outline" className=" text-lg px-8 py-4">
               Conheça Nossa História
             </Button>

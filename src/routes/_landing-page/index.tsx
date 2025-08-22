@@ -13,7 +13,7 @@ function RouteComponent() {
     <main className="min-h-screen">
       <Hero />
       <Festival />
-      s <About />
+      <About />
       <Join />
       <Footer />
     </main>

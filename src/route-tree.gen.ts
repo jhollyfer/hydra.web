@@ -9,38 +9,75 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as PrivateLayoutRouteImport } from './routes/_private/layout'
 import { Route as LandingPageIndexRouteImport } from './routes/_landing-page/index'
+import { Route as PrivateMembersIndexRouteImport } from './routes/_private/members/index'
+import { Route as PrivateDashboardIndexRouteImport } from './routes/_private/dashboard/index'
 
+const PrivateLayoutRoute = PrivateLayoutRouteImport.update({
+  id: '/_private',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LandingPageIndexRoute = LandingPageIndexRouteImport.update({
   id: '/_landing-page/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivateMembersIndexRoute = PrivateMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
+const PrivateDashboardIndexRoute = PrivateDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => PrivateLayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LandingPageIndexRoute
+  '/dashboard': typeof PrivateDashboardIndexRoute
+  '/members': typeof PrivateMembersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LandingPageIndexRoute
+  '/dashboard': typeof PrivateDashboardIndexRoute
+  '/members': typeof PrivateMembersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_private': typeof PrivateLayoutRouteWithChildren
   '/_landing-page/': typeof LandingPageIndexRoute
+  '/_private/dashboard/': typeof PrivateDashboardIndexRoute
+  '/_private/members/': typeof PrivateMembersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dashboard' | '/members'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/_landing-page/'
+  to: '/' | '/dashboard' | '/members'
+  id:
+    | '__root__'
+    | '/_private'
+    | '/_landing-page/'
+    | '/_private/dashboard/'
+    | '/_private/members/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  PrivateLayoutRoute: typeof PrivateLayoutRouteWithChildren
   LandingPageIndexRoute: typeof LandingPageIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateLayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_landing-page/': {
       id: '/_landing-page/'
       path: '/'
@@ -48,10 +85,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingPageIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_private/members/': {
+      id: '/_private/members/'
+      path: '/members'
+      fullPath: '/members'
+      preLoaderRoute: typeof PrivateMembersIndexRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
+    '/_private/dashboard/': {
+      id: '/_private/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof PrivateDashboardIndexRouteImport
+      parentRoute: typeof PrivateLayoutRoute
+    }
   }
 }
 
+interface PrivateLayoutRouteChildren {
+  PrivateDashboardIndexRoute: typeof PrivateDashboardIndexRoute
+  PrivateMembersIndexRoute: typeof PrivateMembersIndexRoute
+}
+
+const PrivateLayoutRouteChildren: PrivateLayoutRouteChildren = {
+  PrivateDashboardIndexRoute: PrivateDashboardIndexRoute,
+  PrivateMembersIndexRoute: PrivateMembersIndexRoute,
+}
+
+const PrivateLayoutRouteWithChildren = PrivateLayoutRoute._addFileChildren(
+  PrivateLayoutRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
+  PrivateLayoutRoute: PrivateLayoutRouteWithChildren,
   LandingPageIndexRoute: LandingPageIndexRoute,
 }
 export const routeTree = rootRouteImport

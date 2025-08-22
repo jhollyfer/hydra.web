@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { JoinSheet } from "./sheet/join";
 
 export function Join() {
   return (
@@ -72,12 +73,7 @@ export function Join() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="text-lg px-8 py-4 animate-pulse-glow"
-              >
-                Quero fazer parte do Mangangá
-              </Button>
+              <JoinSheet />
               <Button
                 size="lg"
                 variant="outline"
