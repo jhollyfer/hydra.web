@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { JoinSheet } from "./sheet/join";
 
 export function Join() {
   return (
@@ -73,7 +72,7 @@ export function Join() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <JoinSheet />
+              {/* <JoinSheet /> */}
               <Button
                 size="lg"
                 variant="outline"
