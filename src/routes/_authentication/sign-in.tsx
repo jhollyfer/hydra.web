@@ -47,6 +47,11 @@ function RouteComponent() {
       router.navigate({
         to: "/members",
         replace: true,
+        search: {
+          page: 1,
+          perPage: 50,
+          search: undefined,
+        },
       });
     },
   });
