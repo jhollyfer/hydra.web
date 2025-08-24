@@ -14,7 +14,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LogOutIcon } from "lucide-react";
+import { LogOutIcon, Rotate3dIcon } from "lucide-react";
 
 // import Logo from "@/assets/laca-logo.webp";
 import { Badge } from "@/components/ui/badge";
@@ -30,15 +30,26 @@ export function Sidebar() {
   const menu = AppMenuRoute;
 
   return (
-    <Root collapsible="icon" variant="sidebar" className="p-0">
-      <SidebarHeader className="border-b h-32 p-0 flex justify-center items-center">
-        {/* <img src={Logo} alt="Laca Guinchos Logo" /> */}
-        HYDRA
+    <Root collapsible="icon" variant="floating">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:!p-1.5"
+            >
+              <Link to="/dashboard">
+                <Rotate3dIcon className="size-5" />
+                <span className="text-base font-semibold">HYDRA</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
-      <SidebarContent className="p-0">
+      <SidebarContent>
         {menu?.map((props) => (
-          <SidebarGroup className="p-0">
+          <SidebarGroup>
             <SidebarGroupLabel>{props.title}</SidebarGroupLabel>
             <SidebarMenu>
               {props.items.map((item) => {
@@ -51,7 +62,7 @@ export function Sidebar() {
                   <SidebarMenuItem>
                     <SidebarMenuButton
                       asChild
-                      className="group data-[active=true]:bg-primary data-[active=true]:text-primary-foreground dark:data-[active=true]:text-secondary-foreground rounded-none h-16 pl-6"
+                      className="group data-[active=true]:bg-primary data-[active=true]:text-primary-foreground "
                       isActive={location.includes(to)}
                       tooltip={item.title}
                     >
@@ -62,9 +73,9 @@ export function Sidebar() {
                             width={32}
                           />
                         )}
-                        <span className="text-lg">{item.title}</span>
+                        <span>{item.title}</span>
                         {item.badge && (
-                          <Badge className="rounded-full px-1 py-0 text-xs">
+                          <Badge className="rounded-full px-1  text-xs">
                             {item.badge}
                           </Badge>
                         )}
@@ -76,7 +87,7 @@ export function Sidebar() {
             </SidebarMenu>
           </SidebarGroup>
         ))}
-        <SidebarGroup className="p-0">
+        <SidebarGroup>
           <Tooltip delayDuration={100}>
             <TooltipTrigger asChild>
               <SidebarMenu>
@@ -84,10 +95,10 @@ export function Sidebar() {
                   <SidebarMenuButton
                     // onClick={() => deslogarMutation.mutateAsync()}
                     // onClick={logout}
-                    className="w-full h-16 rounded-none pl-6 cursor-pointer"
+                    className="w-full rounded-none cursor-pointer"
                   >
                     <LogOutIcon className="text-primary" />
-                    <span className="text-lg">Sair</span>
+                    <span>Sair</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>

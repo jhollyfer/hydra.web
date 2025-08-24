@@ -3,7 +3,7 @@ import { ChartLineIcon, UserIcon } from "lucide-react";
 
 export const AppMenuRoute: MenuRoute = [
   {
-    title: "",
+    title: "Menu",
     items: [
       {
         title: "Dashboard",

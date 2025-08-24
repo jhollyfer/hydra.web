@@ -27,11 +27,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { API } from "@/lib/api";
 import { Formatter } from "@/lib/formatter";
-import type { Address, Responsible } from "@/lib/model";
+import type { Address, Member, Responsible } from "@/lib/model";
 import { cn } from "@/lib/utils";
+import { QueryClient } from "@/query-client";
 import { useMutation } from "@tanstack/react-query";
+import { useSearch } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { CircleIcon } from "lucide-react";
+import { CircleIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -47,22 +49,37 @@ interface Payload {
   responsible: Pick<Responsible, "mother" | "father">;
 }
 
-export function JoinSheet() {
+export function CreateMemberSheet() {
+  const { search, page, perPage } = useSearch({
+    from: "/_private/members/",
+  });
+
   const [open, setOpen] = React.useState(false);
   const form = useForm();
 
   const create = useMutation({
     mutationFn: async function (payload: Partial<Payload>) {
-      const route = "/members";
-      const { data } = await API.post(route, payload);
+      const route = "/administrators/members";
+      const { data } = await API.post<Member>(route, payload);
       return data;
     },
     onSuccess() {
+      QueryClient.invalidateQueries({
+        queryKey: [
+          "MEMBERS-LIST-PAGINATED",
+          {
+            page,
+            perPage,
+            ...(search && { search }),
+          },
+        ],
+      });
+
       setOpen(false);
       form.reset();
-      toast("Seu cadastro foi realizado com sucesso!", {
+      toast("Membro cadastrado com sucesso!", {
         className: "!bg-primary !text-primary-foreground !border-primary",
-        description: "Agora você juntou-se ao Boi Bumbá Mangangá!",
+        description: "Os dados do membro foram salvos!",
         descriptionClassName: "!text-primary-foreground",
         closeButton: true,
       });
@@ -91,18 +108,17 @@ export function JoinSheet() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button className="text-lg cursor-pointer">
-          Quero fazer parte do Mangangá
+        <Button className="cursor-pointer">
+          <PlusIcon className="size-5" />
+          <span>Novo membro</span>
         </Button>
       </SheetTrigger>
       <SheetContent className="flex flex-col py-4 px-6 gap-5 w-full sm:max-w-2xl overflow-y-auto">
         <SheetHeader className="px-0">
           <SheetTitle className="text-lg font-medium">
-            Junte-se ao Boi Bumbá Mangangá
+            Adicionar membro
           </SheetTitle>
-          <SheetDescription>
-            Faça seu cadastro e junte-se ao Boi Bumbá Mangangá!
-          </SheetDescription>
+          <SheetDescription>Adicione um novo membro</SheetDescription>
         </SheetHeader>
 
         {/* {roles?.status === "error" && <Error />} */}
@@ -419,7 +435,7 @@ export function JoinSheet() {
               {create.status === "pending" && (
                 <CircleIcon className="mr-2 animate-spin" />
               )}
-              <span className="font-semibold">Juntar-se</span>
+              <span className="font-semibold">Cadastrar</span>
             </Button>
           </form>
         </Form>

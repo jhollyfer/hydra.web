@@ -1,0 +1,96 @@
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Table as Root,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { type Member } from "@/lib/model";
+import { EllipsisIcon, PencilIcon } from "lucide-react";
+import React from "react";
+import { ShowMemberSheet } from "./show-member-sheet";
+interface Props {
+  data: Member[];
+  headers: string[];
+}
+
+export function Table({ data, headers }: Props): React.ReactElement {
+  const CategoryMapper = {
+    FOUNDER: "Fundador",
+    COLLABORATOR: "Colaborador",
+    PARTICIPANT: "Brincante",
+    SPONSOR: "Patrocinador",
+  };
+
+  return (
+    <Root>
+      <TableHeader className="sticky top-0">
+        <TableRow className="">
+          {headers?.map((header) => (
+            <TableHead key={header}>
+              <span>{header}</span>
+            </TableHead>
+          ))}
+          <TableHead></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((row) => (
+          <TableRow key={row.id}>
+            <TableCell>{row.user?.name}</TableCell>
+            <TableCell>{row.cpf ?? "Não informado"}</TableCell>
+            <TableCell>{row.rg ?? "Não informado"}</TableCell>
+            <TableCell>
+              <Badge variant="outline">
+                {CategoryMapper[row.category as keyof typeof CategoryMapper] ??
+                  "Não informado"}
+              </Badge>
+            </TableCell>
+            <TableCell className="w-[80px]">
+              <DropdownMenu dir="ltr" modal={false}>
+                <DropdownMenuTrigger className="p-1 rounded-full border">
+                  <EllipsisIcon className="w-4 h-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="mr-10">
+                  <DropdownMenuLabel>Ações</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+
+                  <ShowMemberSheet memberId={row.id} />
+                  {/* <DropdownMenuItem
+                    className="inline-flex space-x-1 w-full"
+                    // onClick={() => {
+                    //   exibirUsuarioButtonRef?.current?.click();
+                    // }}
+                  >
+                    <EyeIcon className="w-4 h-4" />
+                    <span>Visualizar</span>
+                  </DropdownMenuItem> */}
+
+                  <DropdownMenuItem
+                    className="inline-flex space-x-1 w-full"
+                    // onClick={() => {
+                    //   atualizarUsuarioButtonRef?.current?.click();
+                    // }}
+                  >
+                    <PencilIcon className="w-4 h-4" />
+                    <span>Editar</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Root>
+  );
+}

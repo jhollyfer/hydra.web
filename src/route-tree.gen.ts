@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PrivateLayoutRouteImport } from './routes/_private/layout'
 import { Route as LandingPageIndexRouteImport } from './routes/_landing-page/index'
+import { Route as AuthenticationSignInRouteImport } from './routes/_authentication/sign-in'
 import { Route as PrivateMembersIndexRouteImport } from './routes/_private/members/index'
 import { Route as PrivateDashboardIndexRouteImport } from './routes/_private/dashboard/index'
 
@@ -21,6 +22,11 @@ const PrivateLayoutRoute = PrivateLayoutRouteImport.update({
 const LandingPageIndexRoute = LandingPageIndexRouteImport.update({
   id: '/_landing-page/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticationSignInRoute = AuthenticationSignInRouteImport.update({
+  id: '/_authentication/sign-in',
+  path: '/sign-in',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateMembersIndexRoute = PrivateMembersIndexRouteImport.update({
@@ -35,11 +41,13 @@ const PrivateDashboardIndexRoute = PrivateDashboardIndexRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/sign-in': typeof AuthenticationSignInRoute
   '/': typeof LandingPageIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/members': typeof PrivateMembersIndexRoute
 }
 export interface FileRoutesByTo {
+  '/sign-in': typeof AuthenticationSignInRoute
   '/': typeof LandingPageIndexRoute
   '/dashboard': typeof PrivateDashboardIndexRoute
   '/members': typeof PrivateMembersIndexRoute
@@ -47,18 +55,20 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_private': typeof PrivateLayoutRouteWithChildren
+  '/_authentication/sign-in': typeof AuthenticationSignInRoute
   '/_landing-page/': typeof LandingPageIndexRoute
   '/_private/dashboard/': typeof PrivateDashboardIndexRoute
   '/_private/members/': typeof PrivateMembersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard' | '/members'
+  fullPaths: '/sign-in' | '/' | '/dashboard' | '/members'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard' | '/members'
+  to: '/sign-in' | '/' | '/dashboard' | '/members'
   id:
     | '__root__'
     | '/_private'
+    | '/_authentication/sign-in'
     | '/_landing-page/'
     | '/_private/dashboard/'
     | '/_private/members/'
@@ -66,6 +76,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   PrivateLayoutRoute: typeof PrivateLayoutRouteWithChildren
+  AuthenticationSignInRoute: typeof AuthenticationSignInRoute
   LandingPageIndexRoute: typeof LandingPageIndexRoute
 }
 
@@ -83,6 +94,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof LandingPageIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authentication/sign-in': {
+      id: '/_authentication/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof AuthenticationSignInRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private/members/': {
@@ -118,6 +136,7 @@ const PrivateLayoutRouteWithChildren = PrivateLayoutRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   PrivateLayoutRoute: PrivateLayoutRouteWithChildren,
+  AuthenticationSignInRoute: AuthenticationSignInRoute,
   LandingPageIndexRoute: LandingPageIndexRoute,
 }
 export const routeTree = rootRouteImport
