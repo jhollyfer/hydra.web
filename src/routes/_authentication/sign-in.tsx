@@ -14,6 +14,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { EyeClosedIcon, EyeIcon, LoaderCircle } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authentication/sign-in")({
   component: RouteComponent,
@@ -42,6 +43,12 @@ function RouteComponent() {
     },
     onSuccess(resposta) {
       console.log(resposta);
+      toast("Login efetuado com sucesso!", {
+        className: "!bg-primary !text-primary-foreground !border-primary",
+        description: "Seja bem-vindo, comece a explorar!",
+        descriptionClassName: "!text-primary-foreground",
+        closeButton: true,
+      });
       // logar(resposta);
       // navigate("/dashboard", { replace: true });
       router.navigate({

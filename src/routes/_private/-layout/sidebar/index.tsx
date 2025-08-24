@@ -18,16 +18,40 @@ import { LogOutIcon, Rotate3dIcon } from "lucide-react";
 
 // import Logo from "@/assets/laca-logo.webp";
 import { Badge } from "@/components/ui/badge";
-import { Link, useLocation } from "@tanstack/react-router";
+import { API } from "@/lib/api";
+import { useMutation } from "@tanstack/react-query";
+import { Link, useLocation, useRouter } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { AppMenuRoute } from "./menu";
 
 export function Sidebar() {
+  const router = useRouter();
   const { state, setOpenMobile } = useSidebar();
   const location = useLocation({
     select: (location) => location.pathname,
   });
 
   const menu = AppMenuRoute;
+
+  const signOut = useMutation({
+    mutationFn: async function () {
+      const route = "/authentication/sign-out";
+      await API.post(route);
+    },
+    onSuccess() {
+      toast("Operação efetuada com sucesso!", {
+        className: "!bg-primary !text-primary-foreground !border-primary",
+        description: "Para continuar, efetue o login!",
+        descriptionClassName: "!text-primary-foreground",
+        closeButton: true,
+      });
+
+      router.navigate({
+        to: "/sign-in",
+        replace: true,
+      });
+    },
+  });
 
   return (
     <Root collapsible="icon" variant="floating">
@@ -93,6 +117,7 @@ export function Sidebar() {
               <SidebarMenu>
                 <SidebarMenuItem>
                   <SidebarMenuButton
+                    onClick={() => signOut.mutateAsync()}
                     // onClick={() => deslogarMutation.mutateAsync()}
                     // onClick={logout}
                     className="w-full rounded-none cursor-pointer"

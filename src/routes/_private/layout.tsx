@@ -11,7 +11,7 @@ function RouteComponent() {
   return (
     <SidebarProvider>
       <Sidebar />
-      <SidebarInset className="relative flex flex-col h-screen w-screen overflow-hidden flex-1">
+      <SidebarInset className="relative flex flex-col h-screen w-screen overflow-hidden flex-1 px-4 sm:px-2">
         <Header />
         <Outlet />
       </SidebarInset>
