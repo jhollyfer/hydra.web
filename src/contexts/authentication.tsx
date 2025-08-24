@@ -38,8 +38,6 @@ export const AuthenticationProvider = ({
   const signOut = React.useCallback(() => {
     setLogged(false);
     setUser(null);
-    localStorage.clear();
-    sessionStorage.clear();
   }, []);
 
   const check = React.useCallback(async () => {
@@ -66,8 +64,6 @@ export const AuthenticationProvider = ({
       if (error instanceof AxiosError) {
         if (error.response?.status === 401) {
           localStorage.removeItem(APP_ID);
-          sessionStorage.clear();
-          // window.location.href = "/autenticacao";
         }
       }
     }
