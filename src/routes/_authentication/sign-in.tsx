@@ -19,10 +19,73 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authentication/sign-in")({
   component: RouteComponent,
   head: () => ({
+    // Meta tags básicas
     meta: [
       {
-        title: "Mangangá | Sign-in",
-        description: "Página de sign-in do Boi Bumbá Mangangá",
+        title: "Mangangá | Sign In",
+        description: "Acesse sua conta do Boi Bumbá Mangangá",
+      },
+      {
+        name: "robots",
+        content: "index, follow",
+      },
+      // Open Graph
+      {
+        property: "og:title",
+        content: "Mangangá | Sign In",
+      },
+      {
+        property: "og:description",
+        content: "Acesse sua conta do Boi Bumbá Mangangá",
+      },
+      {
+        property: "og:url",
+        content: "https://www.manganga.maiyu.com.br/og-image.jpg",
+      },
+      {
+        property: "og:site_name",
+        content: "Mangangá | Sign In",
+      },
+      {
+        property: "og:locale",
+        content: "pt-BR",
+      },
+      {
+        property: "og:type",
+        content: "website",
+      },
+      {
+        property: "og:image",
+        content: "https://www.manganga.maiyu.com.br/og-image.jpg",
+      },
+      {
+        property: "og:image:width",
+        content: "800",
+      },
+      {
+        property: "og:image:height",
+        content: "600",
+      },
+      {
+        property: "og:image:alt",
+        content: "Mangangá | Sign In",
+      },
+      // Twitter Cards (opcional)
+      {
+        name: "twitter:card",
+        content: "summary_large_image",
+      },
+      {
+        name: "twitter:title",
+        content: "Mangangá | Sign In",
+      },
+      {
+        name: "twitter:description",
+        content: "Acesse sua conta do Boi Bumbá Mangangá",
+      },
+      {
+        name: "twitter:image",
+        content: "https://www.manganga.maiyu.com.br/og-image.jpg",
       },
     ],
   }),
