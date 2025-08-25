@@ -25,9 +25,11 @@ export const Route = createFileRoute("/_private/members/")({
   },
 
   head: () => ({
-    title: "Mangangá - Gerenciar Membros",
     meta: [
       // Meta tags básicas
+      {
+        title: "Mangangá - Gerenciar Membros",
+      },
       {
         name: "description",
         content:

@@ -8,9 +8,11 @@ import { Join } from "./-components/join";
 export const Route = createFileRoute("/_landing-page/")({
   component: RouteComponent,
   head: () => ({
-    title: "Mangangá - Site Oficial do Boi Bumbá",
     meta: [
-      // Meta tags básicas
+      // Meta tags básicas,
+      {
+        title: "Mangangá - Site Oficial do Boi Bumbá",
+      },
       {
         name: "description",
         content:

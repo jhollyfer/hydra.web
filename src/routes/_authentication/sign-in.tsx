@@ -19,9 +19,11 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authentication/sign-in")({
   component: RouteComponent,
   head: () => ({
-    title: "Mangangá - Entrar na sua conta",
     meta: [
       // Meta tags básicas
+      {
+        title: "Mangangá - Entrar na sua conta",
+      },
       {
         name: "description",
         content:
