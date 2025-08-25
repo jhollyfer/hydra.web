@@ -23,6 +23,15 @@ export const Route = createFileRoute("/_private/members/")({
       search: params?.search,
     };
   },
+
+  head: () => ({
+    meta: [
+      {
+        title: "Mangangá | Membros",
+        description: "Página de membros do Boi Bumbá Mangangá",
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
