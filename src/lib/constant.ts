@@ -7,8 +7,4 @@ export const MetaDefault: Meta = {
   lastPage: 1,
   firstPage: 1,
   currentPage: 1,
-  lastPageUrl: null,
-  firstPageUrl: null,
-  nextPageUrl: null,
-  previousPageUrl: null,
 };
