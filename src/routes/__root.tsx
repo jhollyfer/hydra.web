@@ -10,12 +10,4 @@ export const Route = createRootRoute({
       <Outlet />
     </main>
   ),
-  head: () => ({
-    meta: [
-      {
-        title: "Mangangá",
-        description: "Página principal do Boi Bumbá Mangangá ",
-      },
-    ],
-  }),
 });
