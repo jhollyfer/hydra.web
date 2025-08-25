@@ -18,6 +18,14 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authentication/sign-in")({
   component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: "Mangangá | Sign-in",
+        description: "Página de sign-in do Boi Bumbá Mangangá",
+      },
+    ],
+  }),
 });
 
 function RouteComponent() {
