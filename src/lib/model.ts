@@ -11,10 +11,6 @@ export interface Meta {
   currentPage: number | null;
   lastPage: number;
   firstPage: number;
-  lastPageUrl: string | null;
-  firstPageUrl: string | null;
-  nextPageUrl: string | null;
-  previousPageUrl: string | null;
 }
 
 export interface Paginated<Entity> {
@@ -28,6 +24,7 @@ export interface User extends Base {
   password: string | null;
   address: Address | null;
   responsible: Responsible | null;
+  role: string;
 }
 
 export interface Address extends Base {
@@ -49,7 +46,6 @@ export interface Member extends Base {
   rg: string;
   birthDate: string;
   extras: string | null;
-  category: string;
   registeredById: User["id"];
   userId: User["id"];
   user: User | null;

@@ -39,7 +39,7 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
   const response = useQuery({
     queryKey: ["MEMBER-GET-BY-ID", memberId],
     queryFn: async function () {
-      const route = `/administrators/members/${memberId}`;
+      const route = `/administrator/members/${memberId}`;
       const { data } = await API.get<Member>(route);
       return data;
     },
@@ -140,6 +140,7 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                 control={form.control}
                 name="birthDate"
                 defaultValue={response.data?.birthDate
+                  ?.split("T")[0]
                   ?.split("-")
                   .reverse()
                   .join("/")}
@@ -165,8 +166,8 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
 
               <FormField
                 control={form.control}
-                name="category"
-                defaultValue={response.data?.category}
+                name="role"
+                defaultValue={response.data?.user?.role}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">

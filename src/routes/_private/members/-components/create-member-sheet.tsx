@@ -43,7 +43,7 @@ interface Payload {
   cpf: string;
   rg: string | null;
   birthDate: string;
-  category: string;
+  role: string;
   extras: string | null;
   address: Pick<Address, "street" | "number" | "complement" | "neighborhood">;
   responsible: Pick<Responsible, "mother" | "father">;
@@ -59,7 +59,7 @@ export function CreateMemberSheet() {
 
   const create = useMutation({
     mutationFn: async function (payload: Partial<Payload>) {
-      const route = "/administrators/members";
+      const route = "/administrator/members";
       const { data } = await API.post<Member>(route, payload);
       return data;
     },
@@ -241,7 +241,7 @@ export function CreateMemberSheet() {
 
             <FormField
               control={form.control}
-              name="category"
+              name="role"
               rules={{
                 validate: (value) => {
                   if (!value) return "Categoria é obrigatória";

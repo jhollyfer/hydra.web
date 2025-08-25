@@ -25,11 +25,12 @@ interface Props {
 }
 
 export function Table({ data, headers }: Props): React.ReactElement {
-  const CategoryMapper = {
+  const RoleMapper = {
     FOUNDER: "Fundador",
     COLLABORATOR: "Colaborador",
     PARTICIPANT: "Brincante",
     SPONSOR: "Patrocinador",
+    ADMINISTRATOR: "Administrador",
   };
 
   return (
@@ -52,7 +53,7 @@ export function Table({ data, headers }: Props): React.ReactElement {
             <TableCell>{row.rg ?? "Não informado"}</TableCell>
             <TableCell>
               <Badge variant="outline">
-                {CategoryMapper[row.category as keyof typeof CategoryMapper] ??
+                {RoleMapper[row.user?.role as keyof typeof RoleMapper] ??
                   "Não informado"}
               </Badge>
             </TableCell>

@@ -40,7 +40,7 @@ function RouteComponent() {
       },
     ],
     queryFn: async function () {
-      const route = "/administrators/members/paginated";
+      const route = "/administrator/members/paginated";
       const { data } = await API.get<Paginated<Member>>(route, {
         params: {
           page,
