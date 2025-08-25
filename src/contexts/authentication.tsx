@@ -5,7 +5,7 @@ import type { User } from "@/lib/model";
 import { AxiosError } from "axios";
 import React from "react";
 
-export const APP_ID = "@HYDRA:V1";
+export const APP_ID = "@MANGANGA:V1";
 
 export interface AuthenticationIContext {
   logged: boolean;

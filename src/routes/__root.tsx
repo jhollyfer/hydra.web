@@ -13,8 +13,8 @@ export const Route = createRootRoute({
   head: () => ({
     meta: [
       {
-        title: "Hydra",
-        description: "Hydra is a simple and secure password manager",
+        title: "Mangangá",
+        description: "Página principal do Boi Bumbá Mangangá ",
       },
     ],
   }),

@@ -89,7 +89,7 @@ function RouteComponent() {
               <FormItem>
                 <FormLabel>E-mail</FormLabel>
                 <FormControl>
-                  <Input placeholder="example@hydra.com" {...field} />
+                  <Input placeholder="example@manganga.com" {...field} />
                 </FormControl>
                 <FormMessage className="text-right text-destructive" />
               </FormItem>

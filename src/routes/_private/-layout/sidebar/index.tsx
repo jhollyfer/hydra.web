@@ -64,7 +64,7 @@ export function Sidebar() {
             >
               <Link to="/dashboard">
                 <Rotate3dIcon className="size-5" />
-                <span className="text-base font-semibold">HYDRA</span>
+                <span className="text-base font-semibold">MANGANGÁ</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
