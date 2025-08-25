@@ -30,48 +30,48 @@ export const Route = createFileRoute("/_landing-page/")({
 
       // Open Graph Protocol
       {
-        name: "og:type",
+        property: "og:type",
         content: "website",
       },
       {
-        name: "og:site_name",
+        property: "og:site_name",
         content: "Mangangá",
       },
       {
-        name: "og:title",
+        property: "og:title",
         content: "Mangangá - Site Oficial do Boi Bumbá",
       },
       {
-        name: "og:description",
+        property: "og:description",
         content:
           "Site oficial do Boi Bumbá Mangangá - Tradição, cultura e festa popular brasileira",
       },
       {
-        name: "og:url",
+        property: "og:url",
         content: "https://www.manganga.maiyu.com.br",
       },
       {
-        name: "og:image",
+        property: "og:image",
         content: "https://www.manganga.maiyu.com.br/og-image.jpg",
       },
       {
-        name: "og:image:type",
+        property: "og:image:type",
         content: "image/jpeg",
       },
       {
-        name: "og:image:width",
+        property: "og:image:width",
         content: "1200",
       },
       {
-        name: "og:image:height",
+        property: "og:image:height",
         content: "630",
       },
       {
-        name: "og:image:alt",
+        property: "og:image:alt",
         content: "Logotipo do Boi Bumbá Mangangá",
       },
       {
-        name: "og:locale",
+        property: "og:locale",
         content: "pt_BR",
       },
 
