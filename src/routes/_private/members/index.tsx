@@ -25,73 +25,91 @@ export const Route = createFileRoute("/_private/members/")({
   },
 
   head: () => ({
-    // Meta tags básicas
+    title: "Mangangá - Gerenciar Membros",
     meta: [
+      // Meta tags básicas
       {
-        title: "Mangangá | Members",
-        description: "Pagina administrativa de membros do Boi Bumbá Mangangá",
+        name: "description",
+        content:
+          "Área administrativa para gerenciamento de membros do Boi Bumbá Mangangá",
       },
       {
         name: "robots",
-        content: "index, follow",
-      },
-      // Open Graph
-      {
-        property: "og:title",
-        content: "Mangangá | Members",
+        content: "noindex, nofollow", // Páginas administrativas não devem ser indexadas
       },
       {
-        property: "og:description",
-        content: "Pagina administrativa de membros do Boi Bumbá Mangangá",
+        name: "viewport",
+        content: "width=device-width, initial-scale=1.0",
       },
-      {
-        property: "og:url",
-        content: "https://www.manganga.maiyu.com.br/og-image.jpg",
-      },
-      {
-        property: "og:site_name",
-        content: "Mangangá | Members",
-      },
-      {
-        property: "og:locale",
-        content: "pt-BR",
-      },
+
+      // Open Graph Protocol
       {
         property: "og:type",
         content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "Mangangá",
+      },
+      {
+        property: "og:title",
+        content: "Mangangá - Gerenciar Membros",
+      },
+      {
+        property: "og:description",
+        content:
+          "Área administrativa para gerenciamento de membros do Boi Bumbá Mangangá",
+      },
+      {
+        property: "og:url",
+        content: "https://www.manganga.maiyu.com.br/members",
       },
       {
         property: "og:image",
         content: "https://www.manganga.maiyu.com.br/og-image.jpg",
       },
       {
+        property: "og:image:type",
+        content: "image/jpeg",
+      },
+      {
         property: "og:image:width",
-        content: "800",
+        content: "1200",
       },
       {
         property: "og:image:height",
-        content: "600",
+        content: "630",
       },
       {
         property: "og:image:alt",
-        content: "Mangangá | Members",
+        content: "Logotipo do Boi Bumbá Mangangá",
       },
-      // Twitter Cards (opcional)
+      {
+        property: "og:locale",
+        content: "pt_BR",
+      },
+
+      // Twitter Cards
       {
         name: "twitter:card",
         content: "summary_large_image",
       },
       {
         name: "twitter:title",
-        content: "Mangangá | Members",
+        content: "Mangangá - Gerenciar Membros",
       },
       {
         name: "twitter:description",
-        content: "Pagina administrativa de membros do Boi Bumbá Mangangá",
+        content:
+          "Área administrativa para gerenciamento de membros do Boi Bumbá Mangangá",
       },
       {
         name: "twitter:image",
         content: "https://www.manganga.maiyu.com.br/og-image.jpg",
+      },
+      {
+        name: "twitter:image:alt",
+        content: "Logotipo do Boi Bumbá Mangangá",
       },
     ],
   }),

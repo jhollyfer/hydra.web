@@ -19,73 +19,91 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/_authentication/sign-in")({
   component: RouteComponent,
   head: () => ({
-    // Meta tags básicas
+    title: "Mangangá - Entrar na sua conta",
     meta: [
+      // Meta tags básicas
       {
-        title: "Mangangá | Sign In",
-        description: "Acesse sua conta do Boi Bumbá Mangangá",
+        name: "description",
+        content:
+          "Acesse sua conta do Boi Bumbá Mangangá e gerencie sua participação nos eventos",
       },
       {
         name: "robots",
-        content: "index, follow",
-      },
-      // Open Graph
-      {
-        property: "og:title",
-        content: "Mangangá | Sign In",
+        content: "noindex, nofollow", // Páginas de login geralmente não devem ser indexadas
       },
       {
-        property: "og:description",
-        content: "Acesse sua conta do Boi Bumbá Mangangá",
+        name: "viewport",
+        content: "width=device-width, initial-scale=1.0",
       },
-      {
-        property: "og:url",
-        content: "https://www.manganga.maiyu.com.br/og-image.jpg",
-      },
-      {
-        property: "og:site_name",
-        content: "Mangangá | Sign In",
-      },
-      {
-        property: "og:locale",
-        content: "pt-BR",
-      },
+
+      // Open Graph Protocol
       {
         property: "og:type",
         content: "website",
+      },
+      {
+        property: "og:site_name",
+        content: "Mangangá",
+      },
+      {
+        property: "og:title",
+        content: "Mangangá - Entrar na sua conta",
+      },
+      {
+        property: "og:description",
+        content:
+          "Acesse sua conta do Boi Bumbá Mangangá e gerencie sua participação nos eventos",
+      },
+      {
+        property: "og:url",
+        content: "https://www.manganga.maiyu.com.br/sign-in",
       },
       {
         property: "og:image",
         content: "https://www.manganga.maiyu.com.br/og-image.jpg",
       },
       {
+        property: "og:image:type",
+        content: "image/jpeg",
+      },
+      {
         property: "og:image:width",
-        content: "800",
+        content: "1200",
       },
       {
         property: "og:image:height",
-        content: "600",
+        content: "630",
       },
       {
         property: "og:image:alt",
-        content: "Mangangá | Sign In",
+        content: "Logotipo do Boi Bumbá Mangangá",
       },
-      // Twitter Cards (opcional)
+      {
+        property: "og:locale",
+        content: "pt_BR",
+      },
+
+      // Twitter Cards
       {
         name: "twitter:card",
         content: "summary_large_image",
       },
       {
         name: "twitter:title",
-        content: "Mangangá | Sign In",
+        content: "Mangangá - Entrar na sua conta",
       },
       {
         name: "twitter:description",
-        content: "Acesse sua conta do Boi Bumbá Mangangá",
+        content:
+          "Acesse sua conta do Boi Bumbá Mangangá e gerencie sua participação nos eventos",
       },
       {
         name: "twitter:image",
         content: "https://www.manganga.maiyu.com.br/og-image.jpg",
+      },
+      {
+        name: "twitter:image:alt",
+        content: "Logotipo do Boi Bumbá Mangangá",
       },
     ],
   }),
