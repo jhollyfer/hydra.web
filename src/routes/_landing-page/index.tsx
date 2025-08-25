@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_landing-page/")({
     meta: [
       {
         title: "Mangangá",
-        description: "Site oficial do Boi Bumbá Manganga",
+        description: "Site oficial do Boi Bumbá Mangangá",
       },
       {
         name: "robots",
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_landing-page/")({
       },
       {
         property: "og:description",
-        content: "Site oficial do Boi Bumbá Manganga",
+        content: "Site oficial do Boi Bumbá Mangangá",
       },
       {
         property: "og:url",
@@ -69,7 +69,7 @@ export const Route = createFileRoute("/_landing-page/")({
       },
       {
         name: "twitter:description",
-        content: "Site oficial do Boi Bumbá Manganga",
+        content: "Site oficial do Boi Bumbá Mangangá",
       },
       {
         name: "twitter:image",
