@@ -40,12 +40,15 @@ import { toast } from "sonner";
 
 interface Payload {
   name: string;
-  cpf: string;
-  rg: string | null;
+  cpf: string | null;
+  rg: string;
   birthDate: string;
   role: string;
   extras: string | null;
-  address: Pick<Address, "street" | "number" | "complement" | "neighborhood">;
+  address: Pick<
+    Address,
+    "street" | "number" | "complement" | "neighborhood"
+  > | null;
   responsible: Pick<Responsible, "mother" | "father">;
 }
 
@@ -86,18 +89,19 @@ export function CreateMemberSheet() {
     },
   });
 
-  const onJoin = form.handleSubmit(function (payload) {
+  const onSubmit = form.handleSubmit(function (payload) {
     create.mutateAsync({
       ...payload,
-      cpf: Formatter.number(payload.cpf),
-      rg: payload.rg || null,
+      cpf: payload.cpf ? Formatter.number(payload.cpf) : null,
+      rg: Formatter.number(payload.rg),
       birthDate: format(payload.birthDate, "yyyy-MM-dd"),
       extras: payload.extras || null,
-      address: {
-        ...payload.address,
-        number: payload.address.number || null,
-        complement: payload.address.complement || null,
-      },
+      // address: {
+      //   ...payload.address,
+      //   number: payload.address.number || null,
+      //   complement: payload.address.complement || null,
+      // },
+      address: null,
       responsible: {
         ...payload.responsible,
         father: payload.responsible.father || null,
@@ -126,7 +130,7 @@ export function CreateMemberSheet() {
         {/* {roles?.status === "pending" && <Skeleton />} */}
 
         <Form {...form}>
-          <form className="space-y-4" onSubmit={onJoin}>
+          <form className="space-y-4" onSubmit={onSubmit}>
             <FormField
               control={form.control}
               name="name"
@@ -152,43 +156,19 @@ export function CreateMemberSheet() {
 
             <FormField
               control={form.control}
-              name="cpf"
+              name="rg"
               rules={{
                 validate: (value) => {
-                  if (!value) return "CPF é obrigatório";
+                  if (!value) return "RG é obrigatório";
                   return true;
                 },
               }}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="data-[error=true]:text-destructive">
-                    CPF
-                    <span className="text-destructive/80">(obrigatório)</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="bg-background h-10"
-                      placeholder="000.000.000-00"
-                      onChange={(e) => {
-                        field.onChange(Formatter.cpf(e.target.value));
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-right text-destructive" />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="rg"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="data-[error=true]:text-destructive">
                     RG
-                    <span className="text-muted-foreground/80">
-                      (opcional, somente números)
+                    <span className="text-destructive/80">
+                      (obrigatório, somente números)
                     </span>
                   </FormLabel>
                   <FormControl>
@@ -291,95 +271,6 @@ export function CreateMemberSheet() {
                 </FormItem>
               )}
             />
-
-            <div className="space-y-2">
-              <h3 className="text-md font-medium">Endereço</h3>
-
-              <FormField
-                control={form.control}
-                name="address.street"
-                rules={{
-                  validate: (value) => {
-                    if (!value) return "Rua é obrigatória";
-                    return true;
-                  },
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="data-[error=true]:text-destructive">
-                      Rua
-                      <span className="text-destructive/80">(obrigatório)</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} />
-                    </FormControl>
-                    <FormMessage className="text-right text-destructive" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address.number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="data-[error=true]:text-destructive">
-                      Número
-                      <span className="text-muted-foreground/80">
-                        (deixe vazio para S/N)
-                      </span>
-                      {/* <span className="text-destructive">*</span> */}
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="0000" {...field} />
-                    </FormControl>
-                    <FormMessage className="text-right text-destructive" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address.neighborhood"
-                rules={{
-                  validate: (value) => {
-                    if (!value) return "Bairro é obrigatório";
-                    return true;
-                  },
-                }}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="data-[error=true]:text-destructive">
-                      Bairro
-                      <span className="text-destructive/80">(obrigatório)</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="" {...field} />
-                    </FormControl>
-                    <FormMessage className="text-right text-destructive" />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address.complement"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="data-[error=true]:text-destructive">
-                      Complemento
-                      <span className="text-muted-foreground/80">
-                        (opcional)
-                      </span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="Apartamento, bloco..." {...field} />
-                    </FormControl>
-                    <FormMessage className="text-right text-destructive" />
-                  </FormItem>
-                )}
-              />
-            </div>
 
             <div className="space-y-2">
               <h3 className="text-md font-medium">Filiação</h3>

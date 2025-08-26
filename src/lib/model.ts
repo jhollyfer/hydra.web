@@ -28,10 +28,10 @@ export interface User extends Base {
 }
 
 export interface Address extends Base {
-  street: string;
+  street: string | null;
   number: string | null;
   complement: string | null;
-  neighborhood: string;
+  neighborhood: string | null;
   userId: User["id"];
 }
 
@@ -42,7 +42,7 @@ export interface Responsible extends Base {
 }
 
 export interface Member extends Base {
-  cpf: string;
+  cpf: string | null;
   rg: string;
   birthDate: string;
   extras: string | null;

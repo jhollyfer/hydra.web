@@ -1,3 +1,5 @@
+import { DateTimePicker } from "@/components/date-picker";
+import { Button } from "@/components/ui/button";
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import {
   Form,
@@ -26,13 +28,36 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { API } from "@/lib/api";
 import { Formatter } from "@/lib/formatter";
-import type { Member } from "@/lib/model";
-import { useQuery } from "@tanstack/react-query";
-import { EyeIcon } from "lucide-react";
+import type { Address, Member, Responsible } from "@/lib/model";
+import { cn } from "@/lib/utils";
+import { QueryClient } from "@/query-client";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSearch } from "@tanstack/react-router";
+import { format } from "date-fns";
+import { CircleIcon, PencilIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
-export function ShowMemberSheet({ memberId }: { memberId: string }) {
+interface Payload {
+  name: string;
+  cpf: string | null;
+  rg: string;
+  birthDate: string;
+  role: string;
+  extras: string | null;
+  address: Pick<
+    Address,
+    "street" | "number" | "complement" | "neighborhood"
+  > | null;
+  responsible: Pick<Responsible, "mother" | "father">;
+}
+
+export function UpdateMemberSheet({ memberId }: { memberId: string }) {
+  const { search, page, perPage } = useSearch({
+    from: "/_private/members/",
+  });
+
   const [open, setOpen] = React.useState(false);
   const form = useForm();
 
@@ -45,44 +70,99 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
     },
   });
 
+  const update = useMutation({
+    mutationFn: async function (payload: Partial<Payload>) {
+      const route = "/administrator/members/".concat(memberId);
+      const { data } = await API.patch<Member>(route, payload);
+      return data;
+    },
+    onSuccess() {
+      QueryClient.invalidateQueries({
+        queryKey: [
+          "MEMBERS-LIST-PAGINATED",
+          {
+            page,
+            perPage,
+            ...(search && { search }),
+          },
+        ],
+      });
+
+      setOpen(false);
+      form.reset();
+      toast("Membro atualizado com sucesso!", {
+        className: "!bg-primary !text-primary-foreground !border-primary",
+        description: "Os dados do membro foram atualizados!",
+        descriptionClassName: "!text-primary-foreground",
+        closeButton: true,
+      });
+    },
+  });
+
+  const onSubmit = form.handleSubmit(function (payload) {
+    update.mutateAsync({
+      ...payload,
+      cpf: payload.cpf ? Formatter.number(payload.cpf) : null,
+      rg: Formatter.number(payload.rg),
+      birthDate: format(payload.birthDate, "yyyy-MM-dd"),
+      extras: payload.extras || null,
+      responsible: {
+        ...payload.responsible,
+        father: payload.responsible.father || null,
+      },
+      ...(payload.address && {
+        address: {
+          ...payload.address,
+          number: payload.address.number || null,
+          complement: payload.address.complement || null,
+          neighborhood: payload.address.neighborhood || null,
+          street: payload.address.street || null,
+        },
+      }),
+    });
+  });
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-          <EyeIcon className="size-4" />
-          <span>Visualizar</span>
+          <PencilIcon className="size-4" />
+          <span>Editar</span>
         </DropdownMenuItem>
       </SheetTrigger>
       <SheetContent className="flex flex-col py-4 px-6 gap-5 w-full sm:max-w-2xl overflow-y-auto">
         <SheetHeader className="px-0">
           <SheetTitle className="text-lg font-medium">
-            Visualizar detalhes membro
+            Adicionar membro
           </SheetTitle>
-          <SheetDescription>Veja os detalhes do membro</SheetDescription>
+          <SheetDescription>Adicione um novo membro</SheetDescription>
         </SheetHeader>
 
         {/* {roles?.status === "error" && <Error />} */}
 
         {/* {roles?.status === "pending" && <Skeleton />} */}
 
-        {response.status === "success" && (
+        {response?.status === "success" && (
           <Form {...form}>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={onSubmit}>
               <FormField
                 control={form.control}
                 name="name"
                 defaultValue={response.data?.user?.name}
+                rules={{
+                  validate: (value) => {
+                    if (!value) return "Nome é obrigatório";
+                    return true;
+                  },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
                       Nome completo
+                      <span className="text-destructive/80">(obrigatório)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        disabled
-                        placeholder="Seu nome completo"
-                        {...field}
-                      />
+                      <Input placeholder="Seu nome completo" {...field} />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
                   </FormItem>
@@ -92,22 +172,23 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
               <FormField
                 control={form.control}
                 name="cpf"
-                defaultValue={
-                  response.data?.cpf
-                    ? Formatter.cpf(response.data?.cpf)
-                    : undefined
-                }
+                defaultValue={response.data?.cpf}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
                       CPF
+                      <span className="text-muted-foreground/80">
+                        (opcional)
+                      </span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        disabled
                         className="bg-background h-10"
                         placeholder="000.000.000-00"
+                        onChange={(e) => {
+                          field.onChange(Formatter.cpf(e.target.value));
+                        }}
                       />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
@@ -119,15 +200,23 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                 control={form.control}
                 name="rg"
                 defaultValue={response.data?.rg}
+                rules={{
+                  validate: (value) => {
+                    if (!value) return "Nome é obrigatório";
+                    return true;
+                  },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
                       RG
+                      <span className="text-destructive/80">
+                        (obrigatório, somente números)
+                      </span>
                     </FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        disabled
                         className="bg-background h-10"
                         // placeholder="000.000.000-00"
                         onChange={(e) => {
@@ -143,23 +232,40 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
               <FormField
                 control={form.control}
                 name="birthDate"
-                defaultValue={response.data?.birthDate
-                  ?.split("T")[0]
-                  ?.split("-")
-                  .reverse()
-                  .join("/")}
+                defaultValue={
+                  response.data?.birthDate
+                    ? new Date(
+                        response.data.birthDate
+                          ?.trim()
+                          ?.split("T")[0]
+                          ?.replace(/-/g, "/")
+                      )
+                    : undefined
+                }
+                rules={{
+                  validate: (value) => {
+                    if (!value) return "Data de nascimento é obrigatório";
+                    return true;
+                  },
+                }}
                 render={({ field }) => {
+                  const hasError = !!form.formState.errors[field.name];
                   return (
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Data de Nascimento
+                        <span className="text-destructive/80">
+                          (obrigatório)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          disabled
-                          className="bg-background h-10"
-                          // placeholder="000.000.000-00"
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={field.onChange}
+                          granularity="day"
+                          displayFormat={{ hour24: "dd/MM/yyyy" }}
+                          className={cn(hasError && "border-destructive")}
+                          placeholder="Selecione uma data"
                         />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
@@ -172,17 +278,24 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                 control={form.control}
                 name="role"
                 defaultValue={response.data?.user?.role}
+                rules={{
+                  validate: (value) => {
+                    if (!value) return "Categoria é obrigatória";
+                    return true;
+                  },
+                }}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
                       Categoria
+                      <span className="text-destructive/80">(obrigatório)</span>
                     </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger disabled className="w-full">
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Selecione uma categoria" />
                         </SelectTrigger>
                       </FormControl>
@@ -208,10 +321,12 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
                       Outras informações
+                      <span className="text-muted-foreground/80">
+                        (opcional)
+                      </span>
                     </FormLabel>
                     <FormControl>
                       <Textarea
-                        disabled
                         placeholder="Informações adicionais"
                         {...field}
                       />
@@ -226,15 +341,18 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
 
                 <FormField
                   control={form.control}
-                  defaultValue={response.data?.user?.address?.street}
                   name="address.street"
+                  defaultValue={response.data?.user?.address?.street}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Rua
+                        <span className="text-muted-foreground/80">
+                          (opcional)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input disabled placeholder="" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -249,9 +367,13 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Número
+                        <span className="text-muted-foreground/80">
+                          (opcional)
+                        </span>
+                        {/* <span className="text-destructive">*</span> */}
                       </FormLabel>
                       <FormControl>
-                        <Input disabled placeholder="0000" {...field} />
+                        <Input placeholder="0000" {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -266,9 +388,12 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Bairro
+                        <span className="text-muted-foreground/80">
+                          (opcional)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input disabled placeholder="" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -277,19 +402,18 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
 
                 <FormField
                   control={form.control}
-                  defaultValue={response.data?.user?.address?.complement}
                   name="address.complement"
+                  defaultValue={response.data?.user?.address?.complement}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Complemento
+                        <span className="text-muted-foreground/80">
+                          (opcional)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          disabled
-                          placeholder="Apartamento, bloco..."
-                          {...field}
-                        />
+                        <Input placeholder="Apartamento, bloco..." {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -301,16 +425,25 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                 <h3 className="text-md font-medium">Filiação</h3>
 
                 <FormField
-                  defaultValue={response.data?.user?.responsible?.mother}
                   control={form.control}
                   name="responsible.mother"
+                  defaultValue={response.data?.user?.responsible?.mother}
+                  rules={{
+                    validate: (value) => {
+                      if (!value) return "Nome da mãe é obrigatório";
+                      return true;
+                    },
+                  }}
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Nome da Mãe
+                        <span className="text-destructive/80">
+                          (obrigatório)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input disabled placeholder="" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -325,15 +458,29 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
                         Nome do Pai
+                        <span className="text-muted-foreground/80">
+                          (opcional)
+                        </span>
                       </FormLabel>
                       <FormControl>
-                        <Input disabled placeholder="" {...field} />
+                        <Input placeholder="" {...field} />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
                   )}
                 />
               </div>
+
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={update.status === "pending"}
+              >
+                {update.status === "pending" && (
+                  <CircleIcon className="mr-2 animate-spin" />
+                )}
+                <span className="font-semibold">Atualizar</span>
+              </Button>
             </form>
           </Form>
         )}

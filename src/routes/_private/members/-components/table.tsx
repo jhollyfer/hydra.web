@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
@@ -16,9 +15,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { type Member } from "@/lib/model";
-import { EllipsisIcon, PencilIcon } from "lucide-react";
+import { EllipsisIcon } from "lucide-react";
 import React from "react";
 import { ShowMemberSheet } from "./show-member-sheet";
+import { UpdateMemberSheet } from "./update-member-sheet";
 interface Props {
   data: Member[];
   headers: string[];
@@ -67,17 +67,9 @@ export function Table({ data, headers }: Props): React.ReactElement {
                   <DropdownMenuSeparator />
 
                   <ShowMemberSheet memberId={row.id} />
-                  {/* <DropdownMenuItem
-                    className="inline-flex space-x-1 w-full"
-                    // onClick={() => {
-                    //   exibirUsuarioButtonRef?.current?.click();
-                    // }}
-                  >
-                    <EyeIcon className="w-4 h-4" />
-                    <span>Visualizar</span>
-                  </DropdownMenuItem> */}
+                  <UpdateMemberSheet memberId={row.id} />
 
-                  <DropdownMenuItem
+                  {/* <DropdownMenuItem
                     className="inline-flex space-x-1 w-full"
                     // onClick={() => {
                     //   atualizarUsuarioButtonRef?.current?.click();
@@ -85,7 +77,7 @@ export function Table({ data, headers }: Props): React.ReactElement {
                   >
                     <PencilIcon className="w-4 h-4" />
                     <span>Editar</span>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>
