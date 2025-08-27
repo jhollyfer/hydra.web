@@ -1,4 +1,3 @@
-import { DateTimePicker } from "@/components/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -32,7 +31,6 @@ import { cn } from "@/lib/utils";
 import { QueryClient } from "@/query-client";
 import { useMutation } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
-import { format } from "date-fns";
 import { CircleIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -94,7 +92,7 @@ export function CreateMemberSheet() {
       ...payload,
       cpf: payload.cpf ? Formatter.number(payload.cpf) : null,
       rg: Formatter.number(payload.rg),
-      birthDate: format(payload.birthDate, "yyyy-MM-dd"),
+      birthDate: String(payload.birthDate)?.split("/").reverse().join("-"),
       extras: payload.extras || null,
       // address: {
       //   ...payload.address,
@@ -192,11 +190,40 @@ export function CreateMemberSheet() {
               rules={{
                 validate: (value) => {
                   if (!value) return "Data de nascimento é obrigatório";
+
+                  // Validação adicional do formato da data
+                  const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                  const match = value.match(dateRegex);
+
+                  if (!match) return "Formato de data inválido";
+
+                  const [, day, month, year] = match;
+                  const date = new Date(
+                    parseInt(year),
+                    parseInt(month) - 1,
+                    parseInt(day)
+                  );
+
+                  // Verifica se a data é válida
+                  if (
+                    date.getDate() !== parseInt(day) ||
+                    date.getMonth() !== parseInt(month) - 1 ||
+                    date.getFullYear() !== parseInt(year)
+                  ) {
+                    return "Data inválida";
+                  }
+
+                  // Verifica se não é uma data futura
+                  if (date > new Date()) {
+                    return "Data de nascimento não pode ser no futuro";
+                  }
+
                   return true;
                 },
               }}
               render={({ field }) => {
                 const hasError = !!form.formState.errors[field.name];
+
                 return (
                   <FormItem>
                     <FormLabel className="data-[error=true]:text-destructive">
@@ -204,13 +231,15 @@ export function CreateMemberSheet() {
                       <span className="text-destructive/80">(obrigatório)</span>
                     </FormLabel>
                     <FormControl>
-                      <DateTimePicker
-                        value={field.value}
-                        onChange={field.onChange}
-                        granularity="day"
-                        displayFormat={{ hour24: "dd/MM/yyyy" }}
+                      <Input
+                        {...field}
+                        // onChange={handleChange}
+                        onChange={(e) => {
+                          field.onChange(Formatter.date(e.target.value));
+                        }}
+                        placeholder="00/00/0000"
+                        maxLength={10}
                         className={cn(hasError && "border-destructive")}
-                        placeholder="Selecione uma data"
                       />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />

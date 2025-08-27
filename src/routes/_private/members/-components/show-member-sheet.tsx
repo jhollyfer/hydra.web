@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { API } from "@/lib/api";
 import { Formatter } from "@/lib/formatter";
 import type { Member } from "@/lib/model";
+import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { EyeIcon } from "lucide-react";
 import React from "react";
@@ -143,12 +144,49 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
               <FormField
                 control={form.control}
                 name="birthDate"
+                disabled
                 defaultValue={response.data?.birthDate
                   ?.split("T")[0]
                   ?.split("-")
                   .reverse()
                   .join("/")}
+                rules={{
+                  validate: (value) => {
+                    if (!value) return "Data de nascimento é obrigatório";
+
+                    // Validação adicional do formato da data
+                    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+                    const match = value.match(dateRegex);
+
+                    if (!match) return "Formato de data inválido";
+
+                    const [, day, month, year] = match;
+                    const date = new Date(
+                      parseInt(year),
+                      parseInt(month) - 1,
+                      parseInt(day)
+                    );
+
+                    // Verifica se a data é válida
+                    if (
+                      date.getDate() !== parseInt(day) ||
+                      date.getMonth() !== parseInt(month) - 1 ||
+                      date.getFullYear() !== parseInt(year)
+                    ) {
+                      return "Data inválida";
+                    }
+
+                    // Verifica se não é uma data futura
+                    if (date > new Date()) {
+                      return "Data de nascimento não pode ser no futuro";
+                    }
+
+                    return true;
+                  },
+                }}
                 render={({ field }) => {
+                  const hasError = !!form.formState.errors[field.name];
+
                   return (
                     <FormItem>
                       <FormLabel className="data-[error=true]:text-destructive">
@@ -157,9 +195,13 @@ export function ShowMemberSheet({ memberId }: { memberId: string }) {
                       <FormControl>
                         <Input
                           {...field}
-                          disabled
-                          className="bg-background h-10"
-                          // placeholder="000.000.000-00"
+                          // onChange={handleChange}
+                          onChange={(e) => {
+                            field.onChange(Formatter.date(e.target.value));
+                          }}
+                          placeholder="00/00/0000"
+                          maxLength={10}
+                          className={cn(hasError && "border-destructive")}
                         />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
