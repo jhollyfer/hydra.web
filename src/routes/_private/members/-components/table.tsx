@@ -35,7 +35,7 @@ export function Table({ data, headers }: Props): React.ReactElement {
 
   return (
     <Root>
-      <TableHeader className="sticky top-0">
+      <TableHeader className="sticky top-0 bg-background">
         <TableRow className="">
           {headers?.map((header) => (
             <TableHead key={header}>
