@@ -64,13 +64,8 @@ function RouteComponent() {
       // logar(resposta);
       // navigate("/dashboard", { replace: true });
       router.navigate({
-        to: "/members",
+        to: "/dashboard",
         replace: true,
-        search: {
-          page: 1,
-          perPage: 50,
-          search: undefined,
-        },
       });
     },
   });
