@@ -31,6 +31,7 @@ import { cn } from "@/lib/utils";
 import { QueryClient } from "@/query-client";
 import { useMutation } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
+import { AxiosError } from "axios";
 import { CircleIcon, PlusIcon } from "lucide-react";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -84,6 +85,36 @@ export function CreateMemberSheet() {
         descriptionClassName: "!text-primary-foreground",
         closeButton: true,
       });
+    },
+    onError(error) {
+      if (error instanceof AxiosError) {
+        const data = error.response?.data as {
+          message: string;
+          code: number;
+          cause: string;
+        };
+
+        if (data.code === 409 && data.cause === "MEMBER_ALREADY_EXISTS") {
+          form.setError("rg", {
+            message: "Os dados do membro com este RG já foram cadastrados.",
+          });
+          // toast("Membro já cadastrado!", {
+          //   className: "!bg-primary !text-primary-foreground !border-primary",
+          //   description: data.message,
+          //   descriptionClassName: "!text-primary-foreground",
+          //   closeButton: true,
+          // });
+          return;
+        }
+
+        toast("Houve um erro!", {
+          className: "!bg-primary !text-primary-foreground !border-primary",
+          description:
+            "Houve um erro ao cadastrar o membro. Tente novamente mais tarde.",
+          descriptionClassName: "!text-primary-foreground",
+          closeButton: true,
+        });
+      }
     },
   });
 
