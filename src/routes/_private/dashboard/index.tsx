@@ -64,12 +64,6 @@ export const Route = createFileRoute("/_private/dashboard/")({
 function SkeletonDashboard() {
   return (
     <div className="flex-1 w-full p-4 sm:p-6 md:p-8 lg:p-10 flex flex-col gap-4 overflow-y-auto h-auto">
-      {/* Header Skeleton */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
-        <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-4 w-48" />
-      </div>
-
       {/* Cards Skeleton */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {[1, 2, 3, 4].map((i) => (
