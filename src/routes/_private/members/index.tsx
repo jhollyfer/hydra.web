@@ -1,9 +1,11 @@
 import { Pagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
 import { API } from "@/lib/api";
 import { MetaDefault } from "@/lib/constant";
 import type { Member, Paginated } from "@/lib/model";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useSearch } from "@tanstack/react-router";
+import { CircleIcon, DownloadIcon } from "lucide-react";
 import { CreateMemberSheet } from "./-components/create-member-sheet";
 import { Table } from "./-components/table";
 import { TableSkeleton } from "./-components/table-skeleton";
@@ -65,13 +67,70 @@ function RouteComponent() {
     },
   });
 
+  const exportToExcel = useMutation({
+    mutationFn: async function () {
+      const route = "/administrator/members/export-to-excel";
+
+      const response = await API.get(route, {
+        responseType: "blob",
+      });
+
+      return response.data;
+    },
+    onSuccess: (blob) => {
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+
+      const date = new Date()
+        .toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          second: "2-digit",
+          minute: "2-digit",
+          hour: "2-digit",
+        })
+        ?.replace(/\D/g, "");
+
+      link.download = "MEMBROS_".concat(date, ".xlsx");
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      window.URL.revokeObjectURL(url);
+    },
+    onError: (error) => {
+      console.error("Erro ao exportar Excel:", error);
+    },
+  });
+
   const headers = ["Nome", "CPF", "RG", "Categoria"];
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-shrink-0 p-2 flex flex-row justify-between gap-1 ">
         <h1 className="text-2xl font-medium ">Membros</h1>
-        <CreateMemberSheet />
+        <div className="inline-flex space-x-2">
+          <Button
+            className="cursor-pointer"
+            variant="outline"
+            onClick={() => exportToExcel.mutateAsync()}
+            disabled={exportToExcel.status === "pending"}
+          >
+            {exportToExcel.status === "pending" && (
+              <CircleIcon className="animate-spin size-4" />
+            )}
+
+            {!(exportToExcel.status === "pending") && (
+              <DownloadIcon className="size-4" />
+            )}
+            <span>Exportar</span>
+          </Button>
+          <CreateMemberSheet />
+        </div>
       </div>
 
       {response.status === "pending" && (
