@@ -145,7 +145,11 @@ export function CreateMemberSheet() {
                     <span className="text-destructive/80">(obrigatório)</span>
                   </FormLabel>
                   <FormControl>
-                    <Input placeholder="Seu nome completo" {...field} />
+                    <Input
+                      placeholder="Seu nome completo"
+                      {...field}
+                      autoComplete="off"
+                    />
                   </FormControl>
                   <FormMessage className="text-right text-destructive" />
                 </FormItem>
@@ -177,6 +181,7 @@ export function CreateMemberSheet() {
                       onChange={(e) => {
                         field.onChange(Formatter.number(e.target.value));
                       }}
+                      autoComplete="off"
                     />
                   </FormControl>
                   <FormMessage className="text-right text-destructive" />
@@ -240,6 +245,7 @@ export function CreateMemberSheet() {
                         placeholder="00/00/0000"
                         maxLength={10}
                         className={cn(hasError && "border-destructive")}
+                        autoComplete="off"
                       />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
@@ -320,7 +326,7 @@ export function CreateMemberSheet() {
                       <span className="text-destructive/80">(obrigatório)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="" {...field} autoComplete="off" />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
                   </FormItem>
@@ -339,7 +345,7 @@ export function CreateMemberSheet() {
                       </span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="" {...field} />
+                      <Input placeholder="" {...field} autoComplete="off" />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
                   </FormItem>

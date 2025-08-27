@@ -160,7 +160,11 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                       <span className="text-destructive/80">(obrigatório)</span>
                     </FormLabel>
                     <FormControl>
-                      <Input placeholder="Seu nome completo" {...field} />
+                      <Input
+                        placeholder="Seu nome completo"
+                        {...field}
+                        autoComplete="off"
+                      />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
                   </FormItem>
@@ -187,6 +191,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         onChange={(e) => {
                           field.onChange(Formatter.cpf(e.target.value));
                         }}
+                        autoComplete="off"
                       />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
@@ -220,6 +225,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         onChange={(e) => {
                           field.onChange(Formatter.number(e.target.value));
                         }}
+                        autoComplete="off"
                       />
                     </FormControl>
                     <FormMessage className="text-right text-destructive" />
@@ -289,6 +295,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                           }}
                           placeholder="00/00/0000"
                           maxLength={10}
+                          autoComplete="off"
                           className={cn(hasError && "border-destructive")}
                         />
                       </FormControl>
@@ -376,7 +383,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input placeholder="" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -397,7 +404,11 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         {/* <span className="text-destructive">*</span> */}
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="0000" {...field} />
+                        <Input
+                          placeholder="0000"
+                          {...field}
+                          autoComplete="off"
+                        />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -417,7 +428,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input placeholder="" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -437,7 +448,11 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Apartamento, bloco..." {...field} />
+                        <Input
+                          placeholder="Apartamento, bloco..."
+                          {...field}
+                          autoComplete="off"
+                        />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -467,7 +482,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input placeholder="" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
@@ -487,7 +502,7 @@ export function UpdateMemberSheet({ memberId }: { memberId: string }) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="" {...field} />
+                        <Input placeholder="" {...field} autoComplete="off" />
                       </FormControl>
                       <FormMessage className="text-right text-destructive" />
                     </FormItem>
