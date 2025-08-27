@@ -139,7 +139,7 @@ function RouteComponent() {
         <span className={`${colorClass} font-medium`}>
           {Math.abs(value).toFixed(1)}%
         </span>{" "}
-        {label}
+        <span className="ml-1">{label}</span>
       </div>
     );
   };
