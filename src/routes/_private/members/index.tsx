@@ -111,9 +111,9 @@ function RouteComponent() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="flex-shrink-0 p-2 flex flex-row justify-between gap-1 ">
+      <div className="flex-shrink-0 p-2 gap-2 grid grid-cols-1 md:grid-cols-2 items-center justify-between">
         <h1 className="text-2xl font-medium ">Membros</h1>
-        <div className="inline-flex space-x-2">
+        <div className="grid grid-cols-2 items-center gap-2 w-full md:w-auto">
           <Button
             className="cursor-pointer"
             variant="outline"
@@ -123,7 +123,6 @@ function RouteComponent() {
             {exportToExcel.status === "pending" && (
               <CircleIcon className="animate-spin size-4" />
             )}
-
             {!(exportToExcel.status === "pending") && (
               <DownloadIcon className="size-4" />
             )}
