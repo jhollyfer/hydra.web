@@ -3,6 +3,9 @@ import axios from "axios";
 const API = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:3333",
   withCredentials: true,
+  headers: {
+    "X-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone,
+  },
 });
 
 API.interceptors.request.use(

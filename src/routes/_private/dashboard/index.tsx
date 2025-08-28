@@ -107,14 +107,7 @@ function RouteComponent() {
     queryKey: ["DASHBOARD"],
     queryFn: async function () {
       const route = "/administrator/dashboard";
-
-      const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-      const { data } = await API.get<DashboardResponse>(route, {
-        headers: {
-          "X-Timezone": userTimezone,
-        },
-      });
+      const { data } = await API.get<DashboardResponse>(route);
       return data;
     },
   });
